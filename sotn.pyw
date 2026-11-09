@@ -11,7 +11,9 @@ if os.name == 'nt':
 
 class SotNTerminologyApp:
     def __init__(self):
-        self.csv_file = "my_sotn_terms.csv"
+        base_dir = Path(__file__).resolve().parent
+        data_csv = base_dir / "data" / "my_sotn_terms.csv"
+        self.csv_file = data_csv if data_csv.exists() else base_dir / "my_sotn_terms.csv"
         self.terminology = {}
         self.sources = []
         
@@ -82,7 +84,7 @@ class SotNTerminologyApp:
     def load_csv(self):
         path = Path(self.csv_file)
         if not path.exists():
-            messagebox.showerror("文件未找到", f"未找到 {self.csv_file}！请和程序放在同一文件夹")
+            messagebox.showerror("文件未找到", f"未找到 {self.csv_file}！请确认 data/ 目录或程序同级目录存在词典文件")
             return False
         try:
             self.terminology.clear()
@@ -129,7 +131,6 @@ class SotNTerminologyApp:
             self.suggestion_list.selection_set(0)
             self.show_translation_for_index(0)
     
-    # 以下函数保持不变（省略以节省篇幅，但实际代码已包含）
     def on_mouse_hover(self, event): 
         index = self.suggestion_list.nearest(event.y)
         if 0 <= index < self.suggestion_list.size():
